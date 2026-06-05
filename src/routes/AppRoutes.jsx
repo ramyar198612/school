@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { HashRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 
 import MainLayout from "../layouts/MainLayout";
@@ -18,34 +18,42 @@ import Documents from "../pages/students/documents";
 import Settings from "../pages/students/settings";
 import Approvals from "../pages/students/approvals";
 
-// Teacher Pages Imports
-import TeacherDashboard from "../pages/TeacherDashboard"; 
+// Teacher Pages
+import TeacherDashboard from "../pages/TeacherDashboard";
 import Classes from "../pages/teacher/classes";
 import TeacherStudents from "../pages/teacher/students";
 import TeacherAttendance from "../pages/teacher/attendance";
 import Assignment from "../pages/teacher/assignment";
 import ExamsMarks from "../pages/teacher/exams-marks";
-import TeacherMessages from "../pages/teacher/messages"; 
-
-// ⚙️ IMPORT NEW: Dedicated Teacher settings page component
-import TeacherSettings from "../pages/teacher/settings"; // 👈 Ensure this file exists in your project structure
+import TeacherMessages from "../pages/teacher/messages";
+import TeacherSettings from "../pages/teacher/settings";
 
 export default function AppRoutes() {
   const [userRole, setUserRole] = useState("admin");
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
-
-        <Route path="/" element={<MainLayout currentRole={userRole} changeRole={setUserRole} />}>
-          
-          {/* Landing page dashboard toggle based on role */}
-          <Route 
-            index 
-            element={userRole === "admin" ? <Dashboard /> : <TeacherDashboard />} 
+        <Route
+          path="/"
+          element={
+            <MainLayout
+              currentRole={userRole}
+              changeRole={setUserRole}
+            />
+          }
+        >
+          {/* Dashboard based on role */}
+          <Route
+            index
+            element={
+              userRole === "admin"
+                ? <Dashboard />
+                : <TeacherDashboard />
+            }
           />
 
-          {/* --- ADMIN ONLY ROUTES --- */}
+          {/* Admin Routes */}
           {userRole === "admin" && (
             <>
               <Route path="students" element={<Students />} />
@@ -62,7 +70,7 @@ export default function AppRoutes() {
             </>
           )}
 
-          {/* --- TEACHER ONLY ROUTES --- */}
+          {/* Teacher Routes */}
           {userRole === "teacher" && (
             <>
               <Route path="teacher/classes" element={<Classes />} />
@@ -70,16 +78,12 @@ export default function AppRoutes() {
               <Route path="teacher/attendance" element={<TeacherAttendance />} />
               <Route path="teacher/assignment" element={<Assignment />} />
               <Route path="teacher/exams-marks" element={<ExamsMarks />} />
-              <Route path="teacher/messages" element={<TeacherMessages />} /> 
-              
-              {/* ⚙️ ADDED: Path handler for the teacher settings link */}
+              <Route path="teacher/messages" element={<TeacherMessages />} />
               <Route path="teacher/settings" element={<TeacherSettings />} />
             </>
           )}
-
         </Route>
-
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
